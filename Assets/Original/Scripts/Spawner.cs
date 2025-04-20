@@ -44,7 +44,7 @@ public class Spawner : MonoBehaviour
         {
             if (_wavs.Count > _currentWaveNumber + 1)
             {
-                AllEnemySpawned.Invoke();   
+                AllEnemySpawned?.Invoke();   
             }
             _currentVave = null;
         }

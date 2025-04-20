@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class Player : MonoBehaviour
     private int _curentWeaponNumber = 0;
     private int _currentHealth;
     private Animator _animator;
+
+    public Action<int, int> HealthChanged; 
     
     private void Start()
     {
@@ -38,7 +41,9 @@ public class Player : MonoBehaviour
     public void ApplyDamage(int damage)
     {
         _currentHealth -= damage;
-
+        
+        HealthChanged?.Invoke(_currentHealth, _health);
+        
         if (_currentHealth <= 0)
         {
             Destroy(gameObject);

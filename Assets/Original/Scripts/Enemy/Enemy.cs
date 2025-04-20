@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int _health;
     [SerializeField] private int _reward;
 
-    [SerializeField] Player _target;
+    private Player _target;
 
     public Action<Enemy> OnDieEvent;
     
