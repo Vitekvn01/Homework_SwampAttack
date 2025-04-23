@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Spawner : MonoBehaviour
 {
@@ -72,7 +70,7 @@ public class Spawner : MonoBehaviour
     private void OnEnemyDieng(Enemy enemy)
     {
         enemy.OnDieEvent -= OnEnemyDieng;
-        /*_player.AddManey(enemy.Reward);*/
+        _player.AddMoney(enemy.Reward);
     }
 }
 

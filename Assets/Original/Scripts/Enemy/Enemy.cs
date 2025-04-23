@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour
 
     public Action<Enemy> OnDieEvent;
     
-    public int Money { get; private set; }
+    public int Reward => _reward;
 
     public void Init(Player player)
     {
