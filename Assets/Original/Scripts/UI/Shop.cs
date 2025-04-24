@@ -8,6 +8,8 @@ public class Shop : MonoBehaviour
     [SerializeField] private WeaponView _template;
     [SerializeField] private GameObject _itemConteiner;
 
+    private List<WeaponView> _weaponViews = new List<WeaponView>();
+
     private void Start()
     {
         for (int i = 0; i < _weapons.Count; i++)
@@ -16,11 +18,23 @@ public class Shop : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        foreach (var view in _weaponViews)
+        {
+            if (view != null)
+            {
+                view.SellButtonClick -= OnSellButtonClick;
+            }
+        }
+    }
+
     private void AddItem(Weapon weapon)
     {
         var view = Instantiate(_template, _itemConteiner.transform);
         view.SellButtonClick += OnSellButtonClick;
         view.Render(weapon);
+        _weaponViews.Add(view);
     }
 
     private void OnSellButtonClick(Weapon weapon, WeaponView view)
@@ -35,6 +49,7 @@ public class Shop : MonoBehaviour
             _player.BuyWeapon(weapon);
             weapon.Buy();
             view.SellButtonClick -= OnSellButtonClick;
+            _weaponViews.Remove(view);
         }
     }
 }

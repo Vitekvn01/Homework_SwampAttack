@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private ClickHandler _clickHandler;
     [SerializeField] private int _health;
     [SerializeField] private List<Weapon> _weapons;
     [SerializeField] private Transform _weaponPoint;
@@ -12,7 +15,6 @@ public class Player : MonoBehaviour
     private Weapon _currentWeapon;
     private int _curentWeaponNumber = 0;
     private int _currentHealth;
-    private Animator _animator;
     public int Money { get; private set; }
     
     public event Action<int, int> HealthChanged; 
@@ -20,32 +22,16 @@ public class Player : MonoBehaviour
     
     private void Start()
     {
+        _clickHandler.OnClickEvent += TryShoot;
         ChangeWeapon(_weapons[_curentWeaponNumber]);
         _currentHealth = _health;
-        _animator = GetComponentInChildren<Animator>();
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        if (Input.GetMouseButtonDown(0) && Time.timeScale != 0)
-        {
-            _currentWeapon.Shoot();
-        }
+        _clickHandler.OnClickEvent -= TryShoot;
     }
-    
-    private void ChangeWeapon(Weapon weapon)
-    {
-        if (_currentWeapon != null)
-        {
-            Destroy(_currentWeapon.gameObject);
-        }
-        
-        Weapon spawnWeapon = Instantiate(weapon.gameObject, _weaponPoint.position, quaternion.identity).GetComponent<Weapon>();
-        spawnWeapon.transform.SetParent(gameObject.transform);
-        
-        _currentWeapon = spawnWeapon;
-    }
-    
+
     public void ApplyDamage(int damage)
     {
         _currentHealth -= damage;
@@ -97,5 +83,26 @@ public class Player : MonoBehaviour
         }
 
         ChangeWeapon(_weapons[_curentWeaponNumber]);
+    }
+    
+    private void TryShoot()
+    {
+        if (Time.timeScale == 1)
+        {
+            _currentWeapon.Shoot();
+        }
+    }
+    
+    private void ChangeWeapon(Weapon weapon)
+    {
+        if (_currentWeapon != null)
+        {
+            Destroy(_currentWeapon.gameObject);
+        }
+        
+        Weapon spawnWeapon = Instantiate(weapon.gameObject, _weaponPoint.position, quaternion.identity).GetComponent<Weapon>();
+        spawnWeapon.transform.SetParent(gameObject.transform);
+        
+        _currentWeapon = spawnWeapon;
     }
 }

@@ -4,6 +4,8 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private int _damage;
+    
+    private bool _hasHit = false;
 
     private void Update()
     {       
@@ -12,10 +14,17 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent(out Enemy enemy))
+        if (_hasHit == false)
         {
-            enemy.TakeDamage(_damage);
-            Destroy(gameObject);          
+            if (collision.gameObject.TryGetComponent(out Enemy enemy))
+            {
+                enemy.TakeDamage(_damage);  
+                Destroy(gameObject);
+                _hasHit = true;
+            }
         }
+
+        
+
     }
 }

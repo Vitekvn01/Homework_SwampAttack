@@ -11,7 +11,9 @@ public class Spawner : MonoBehaviour
     private Wave _currentVave;
     private int _currentWaveNumber = 0; 
     private float _timerAfterLastSpawn; 
-    private int _spawned; 
+    private int _spawned;
+
+    private List<Enemy> _enemies = new List<Enemy>();
 
     public event Action AllEnemySpawned;
     public event Action<int, int> EnemyCountChanged;
@@ -48,6 +50,17 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        foreach (var enemy in _enemies)
+        {
+            if (enemy != null)
+            {
+                enemy.OnDieEvent -= OnEnemyDieng;
+            }
+        }
+    }
+
     public void NextWave() 
     {
         SetWave(++_currentWaveNumber);
@@ -59,6 +72,7 @@ public class Spawner : MonoBehaviour
         Enemy enemy = Instantiate(_currentVave.Template, _spawnPoint.position, _spawnPoint.rotation, _spawnPoint).GetComponent<Enemy>();
         enemy.Init(_player);
         enemy.OnDieEvent += OnEnemyDieng;
+        _enemies.Add(enemy);
     }
 
     private void SetWave(int index)
@@ -71,6 +85,7 @@ public class Spawner : MonoBehaviour
     {
         enemy.OnDieEvent -= OnEnemyDieng;
         _player.AddMoney(enemy.Reward);
+        _enemies.Remove(enemy);
     }
 }
 

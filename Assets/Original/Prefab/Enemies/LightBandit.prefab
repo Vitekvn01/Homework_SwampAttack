@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetState: {fileID: 2069187972854023195}
-  _trasitionRange: 1
+  _trasitionRange: 2
   _rangetSpreed: 0.5
 --- !u!114 &639668182366271888
 MonoBehaviour:
